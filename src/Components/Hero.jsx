@@ -9,7 +9,7 @@ export default function Hero() {
       </p>
       <Link
         to="/generate"
-        className="text-white px-6 py-3 rounded-xl shadow bg-gradient-to-r from-blue-800 to-blue-500 transition"
+        className="text-white px-5 py-2 rounded-xl shadow bg-gradient-to-r from-blue-800 to-blue-500 transition"
       >
         Commencer
       </Link>
