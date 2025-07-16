@@ -25,7 +25,7 @@ export default function Login() {
   return (
     // rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md 
     <div className="flex-grow overflow-y-auto flex justify-center items-centerp-4">
-      <div className="w-full max-w-md bg-[#1e1e1e] px-8 py-4 my-4 rounded-lg  transition-all duration-300 hover:shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+      <div className="w-full max-w-md text-white/70 bg-[#1e1e1e] px-8 py-4 my-4 rounded-lg border border-gray-600/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(37,99,235,0.3)]">
         <h2 className="text-2xl font-bold text-center mb-6">Connexion</h2>
 
         {error && (
@@ -35,8 +35,8 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-gray-700">
+          <div className=''>
+            <label htmlFor="email" className="block ">
               Email
             </label>
             <input
@@ -50,8 +50,8 @@ export default function Login() {
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-gray-700">
+          <div className=''>
+            <label htmlFor="password" className="block">
               Mot de passe
             </label>
             <input
@@ -96,7 +96,7 @@ export default function Login() {
           </button>
         </div>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm">
           Pas encore de compte?{' '}
           <a href="#" className="text-blue-600 hover:underline">
             S’inscrire
