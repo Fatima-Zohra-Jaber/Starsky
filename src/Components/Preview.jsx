@@ -6,7 +6,6 @@ export default function Preview({ files }) {
   useEffect(() => {
     setSrcDoc(generatePreviewHTML(files));
   }, [files]);
-// console.log(srcDoc);
 
   return (
     <div className="border border-gray-600/50 rounded overflow-hidden h-[500px]">

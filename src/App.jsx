@@ -7,7 +7,7 @@ import Login from "./Components/Login";
 
 export default function App() {
   return (
-    <div className="flex flex-col h-screen text-white bg-black px-8 ">
+    <div className="flex flex-col h-screen text-white bg-black">
       
       <Header />
       <Routes>

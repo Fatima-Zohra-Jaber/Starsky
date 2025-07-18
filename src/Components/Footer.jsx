@@ -1,19 +1,64 @@
-import { Youtube, Twitter, Linkedin, Instagram, Github } from "lucide-react";
+import { Youtube, Twitter, Linkedin, Instagram, Github, Heart, Sparkles } from "lucide-react";
 
 function Footer(){
-
     return (
-        <div className="flex justify-between items-center h-16 border-t border-gray-500/20 text-sm">
-            <p className="">Fait par <span className="text-blue-700 hover:text-blue-500 hover:underline cursor-pointer">Monzed</span></p>
-            <p className="">© 2025 Starsky. Tous droits réservés.</p>
-            <div className="flex items-center space-x-4 text-white/50">
-                <Youtube className="w-5 h-5 hover:text-blue-700 transition-colors cursor-pointer" />
-                <Twitter className="w-5 h-5 hover:text-blue-700 transition-colors cursor-pointer"/>
-                <Linkedin className="w-5 h-5 hover:text-blue-700 transition-colors cursor-pointer"/>
-                <Instagram className="w-5 h-5 hover:text-blue-700 transition-colors cursor-pointer"/>
-                <Github className="w-5 h-5 hover:text-blue-700 transition-colors cursor-pointer"/>
+        <footer className="border-t border-gray-800/50 bg-gray-900/30 backdrop-blur-sm px-8">
+            <div className="flex flex-col md:flex-row justify-between items-center py-4 text-sm">
+                {/* Créateur */}
+                <div className="flex items-center mb-2 md:mb-0">
+                    <span className="text-gray-400">Créé avec</span>
+                    <Heart className="w-4 h-4 mx-1 text-red-400" />
+                    <span className="text-gray-400">par</span>
+                    <span className="ml-1 text-blue-400 hover:text-blue-600 hover:underline cursor-pointer font-medium transition-colors duration-200">
+                        Monzed
+                    </span>
+                </div>
+
+                {/* Copyright */}
+                <div className="text-gray-400 mb-2 md:mb-0">
+                    © 2025 Starsky. Tous droits réservés.
+                </div>
+
+                {/* Réseaux sociaux */}
+                <div className="flex items-center space-x-3">
+                    <a
+                        href="#"
+                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all duration-200"
+                        aria-label="YouTube"
+                    >
+                        <Youtube className="w-4 h-4" />
+                    </a>
+                    <a
+                        href="#"
+                        className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all duration-200"
+                        aria-label="Twitter"
+                    >
+                        <Twitter className="w-4 h-4" />
+                    </a>
+                    <a
+                        href="#"
+                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-600/10 rounded-lg transition-all duration-200"
+                        aria-label="LinkedIn"
+                    >
+                        <Linkedin className="w-4 h-4" />
+                    </a>
+                    <a
+                        href="#"
+                        className="p-2 text-gray-400 hover:text-pink-400 hover:bg-pink-400/10 rounded-lg transition-all duration-200"
+                        aria-label="Instagram"
+                    >
+                        <Instagram className="w-4 h-4" />
+                    </a>
+                    <a
+                        href="#"
+                        className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-300/10 rounded-lg transition-all duration-200"
+                        aria-label="GitHub"
+                    >
+                        <Github className="w-4 h-4" />
+                    </a>
+                </div>
             </div>
-        </div>
+        </footer>
     )
 }
 export default Footer;
