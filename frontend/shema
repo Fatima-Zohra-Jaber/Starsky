@@ -1,0 +1,47 @@
+ backend/
+├── controllers/
+│   ├── userController.js
+│   └── projectController.js
+├── models/
+│   ├── user.js
+│   └── project.js
+├── routes/
+│   ├── userRoutes.js
+│   └── projectRoutes.js
+├── db.js
+├── server.js
+├── .env
+└── package.json
+
+backend/
+├── controllers/
+│   └── userController.js      ← tu mets les logiques auth ici
+├── routes/
+│   └── userRoutes.js          ← tu exposes les routes comme /register, /login
+├── db.js                      ← pour initialiser Supabase (supabaseClient.js)
+├── server.js  
+
+/Starsky
+│
+├── backend/              → Serveur Express (API, Supabase)
+│   ├── controllers/      → Logique métier (auth, projets, etc.)
+│   ├── routes/           → Routes de l'API
+│   ├── services/         → Connexion Supabase, utilitaires
+│   ├── middleware/       → Authentification, erreurs, etc.
+│   ├── .env              → Variables d’environnement
+│   ├── index.js          → Point d’entrée backend (Express)
+│   ├── package.json      → Dépendances backend
+│
+├── frontend/             → Application React avec Vite
+│   ├── public/           → Images et fichiers statiques
+│   ├── src/
+│   │   ├── components/   → Composants UI réutilisables
+│   │   ├── services/     → Appels API (axios, fetch)
+│   │   ├── App.tsx       → Composant principal
+│   │   ├── main.tsx      → Point d’entrée React
+│   ├── tailwind.config.js
+│   ├── vite.config.js
+│   ├── package.json      → Dépendances frontend
+│
+└── README.md             → Documentation
+

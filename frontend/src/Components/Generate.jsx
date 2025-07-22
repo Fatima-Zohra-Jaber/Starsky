@@ -1,9 +1,14 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, ArrowRight, Copy, FolderCode, Code, Hash, FileText, Download, Bot, Eye, Loader2, AlertCircle, CheckCheck } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Preview from "./Preview";
 import Editor from "@monaco-editor/react"
+// import { toast } from "react-toastify";
+import { getIdUser, addProject } from '../services/api';
+// import supabase from '../supabaseClient';
+
+
 
 function Generate() {
   const [messages, setMessages] = useState([]);
@@ -14,112 +19,13 @@ function Generate() {
   const [showPreview, setShowPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [generationStats, setGenerationStats] = useState(null);
 
   const chatEndRef = useRef(null);
 
-  // Configuration API Gemini améliorée
-  const GEMINI_CONFIG = {
-    apiKey: 'AIzaSyC9vNkHk0PewELwI8gvJJiVrC0cgAqRsdI',
-    model: 'gemini-2.0-flash-exp', // Modèle mis à jour
-    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/models',
-    temperature: 0.2,
-    maxOutputTokens: 65536
-  };
-
-  // Fonction améliorée pour appeler l'API Gemini
-  const callGeminiAPI = async (prompt) => {
-    const url = `${GEMINI_CONFIG.baseUrl}/${GEMINI_CONFIG.model}:generateContent?key=${GEMINI_CONFIG.apiKey}`;
-
-    const requestData = {
-      contents: [
-        {
-          parts: [
-            { text: prompt }
-          ]
-        }
-      ],
-      temperature: GEMINI_CONFIG.temperature,
-      maxOutputTokens: GEMINI_CONFIG.maxOutputTokens,
-      generationConfig: {
-        temperature: GEMINI_CONFIG.temperature,
-        maxOutputTokens: GEMINI_CONFIG.maxOutputTokens,
-        topP: 0.8,
-        topK: 40
-      }
-    };
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData)
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  };
-
-  // Fonction pour optimiser le prompt de génération de site web
-  const createWebsitePrompt = (userRequest) => {
-    return `Tu es un développeur web expert. Génère un site web complet basé sur cette demande : "${userRequest}"
-
-INSTRUCTIONS IMPORTANTES :
-1. Crée un site web moderne et responsive
-2. Utilise HTML5, CSS3 moderne et JavaScript vanilla
-3. Inclus des animations CSS et des interactions JavaScript
-4. Assure-toi que le design soit professionnel et attrayant
-5. Génère EXACTEMENT 3 fichiers : index.html, style.css, et script.js
-
-FORMAT DE RÉPONSE REQUIS :
-- Commence par une brève explication du concept
-- Puis génère les fichiers avec cette structure exacte :
-
-**index.html**:
-\`\`\`html
-[code HTML complet]
-\`\`\`
-
-**style.css**:
-\`\`\`css
-[code CSS complet avec animations]
-\`\`\`
-
-**script.js**:
-\`\`\`javascript
-[code JavaScript pour les interactions]
-\`\`\`
-
-Assure-toi que le site soit entièrement fonctionnel et visuellement impressionnant.`;
-  };
-
-  // Fonction pour valider et traiter la réponse de l'API
-  const processAPIResponse = (data) => {
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-    if (!rawText) {
-      throw new Error("Aucune réponse reçue de l'API");
-    }
-
-    console.log("RAW AI TEXT:", rawText);
-
-    // Vérifier que la réponse contient des blocs de code
-    const codeBlocks = rawText.match(/```[\s\S]*?```/g);
-    if (!codeBlocks || codeBlocks.length === 0) {
-      throw new Error("Aucun code généré dans la réponse");
-    }
-
-    return rawText;
-  };
 
   const sendMessage = async () => {
     if (!userInput.trim() || isLoading) return;
 
-    const startTime = Date.now(); // Début du chrono
     const newMessages = [...messages, { role: "user", content: userInput }];
     setMessages(newMessages);
     setUserInput("");
@@ -130,28 +36,30 @@ Assure-toi que le site soit entièrement fonctionnel et visuellement impressionn
     setMessages(prev => [...prev, { role: "assistant", content: <div className="flex items-center space-x-2"><Bot className="animate-pulse" /><p>Génération en cours...</p></div>, isLoading: true }]);
 
     try {
-      // APPEL API GEMINI amélioré avec prompt optimisé
-      const optimizedPrompt = createWebsitePrompt(userInput);
-      const data = await callGeminiAPI(optimizedPrompt);
+      // APPEL API GEMINI (corrigé)
+      const response = await fetch( 
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC9vNkHk0PewELwI8gvJJiVrC0cgAqRsdI",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: userInput }] }],
+            // response_mime_type: "application/json", // Spécification du format JSON
+          }),
+        }
+      );
 
-      // Calculer les statistiques
-      const endTime = Date.now();
-      const generationTime = ((endTime - startTime) / 1000).toFixed(2);
-      const tokenCount = data?.usageMetadata?.totalTokenCount || 'N/A';
+      const data = await response.json();
 
-      setGenerationStats({
-        time: generationTime,
-        tokens: tokenCount,
-        model: GEMINI_CONFIG.model
-      });
-
-      // Traiter et valider la réponse de l'API
-      const rawText = processAPIResponse(data);
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      // console.log("RAW AI TEXT:", rawText);
 
       // Nettoyer la réponse de l'IA pour ne garder que le texte explicatif
       const cleanedText = rawText.replace(/\*\*(.*?)\*\*\s*:?[\r\n]+```[\s\S]*?```/gm, '')
                                  .replace(/\n{3,}/g, '\n\n').trim();
-      console.log("Cleaned Text:", cleanedText);
+      // console.log("Cleaned Text:", cleanedText);
 
       // Supprimer le message de loading et afficher la réponse
       setMessages((prev) => prev.filter(msg => !msg.isLoading));
@@ -166,16 +74,13 @@ Assure-toi que le site soit entièrement fonctionnel et visuellement impressionn
       if (extractedFiles.length > 0) {
         setFiles(extractedFiles); // ou setState équivalent pour afficher dans l'interface
         console.log("✅ Fichiers extraits :", extractedFiles);
-        // Ajouter un message de succès avec statistiques
-        const successMessage = ` ${extractedFiles.length} fichier(s) généré(s) avec succès !`;
-        const statsMessage = generationStats ?
-          `\n📊 Temps: ${generationStats.time}s | Tokens: ${generationStats.tokens} | Modèle: ${generationStats.model}` : '';
-
+        // Ajouter un message de succès
         setMessages((prev) => [...prev, {
           role: "assistant",
-          content: successMessage + statsMessage,
+          content: ` ${extractedFiles.length} fichier(s) généré(s) avec succès !`,
           isSuccess: true
         }]);
+        saveProject();
       } else {
          console.warn("❌ Aucun fichier détecté. Contenu brut :", rawText);
         setMessages((prev) => [...prev, {
@@ -188,18 +93,9 @@ Assure-toi que le site soit entièrement fonctionnel et visuellement impressionn
     } catch (error) {
       console.error("Erreur API Gemini:", error);
       setMessages((prev) => prev.filter(msg => !msg.isLoading));
-
-      // Message d'erreur plus détaillé
-      let errorMessage = "❌ Erreur lors de la génération.";
-      if (error.message.includes('HTTP error')) {
-        errorMessage = `❌ Erreur API (${error.message}). Vérifiez votre connexion.`;
-      } else if (error.message.includes('Failed to fetch')) {
-        errorMessage = "❌ Erreur de connexion. Vérifiez votre réseau.";
-      }
-
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: errorMessage, isError: true },
+        { role: "assistant", content: "❌ Erreur API ou format incorrect." },
       ]);
     } finally {
       setIsLoading(false);
@@ -293,6 +189,34 @@ async function handleDownload() {
 
 }
 
+  const saveProject = async () => {
+    try {
+      const { data, error } = await getIdUser(); // Obtenir l'utilisateur connecté
+      console.log(data);
+      (JSON.stringify(data));
+      if (error || !data?.user) {
+        console.error('Vous devez être connecté pour sauvegarder un projet');
+        return;
+      }else{console.log("ok");
+      }
+      const user = data.user;
+      const projectContent = files.map(file => ({
+        name: file.file,
+        content: file.content,
+        language: getLanguage(file.file)
+      }));
+
+      const response = await addProject({
+        user_id: user.id,
+        title: userInput.substring(0, 50), // Utiliser le début de l'entrée utilisateur comme titre
+        content: JSON.stringify(projectContent)
+      })
+      console.log(response);
+      
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde: ' + error.message);
+    }
+  };
 
   return (
     <div className="flex-grow overflow-y-auto flex justify-center items-center py-4 px-8">
