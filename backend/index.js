@@ -3,7 +3,7 @@ import cors from "cors";  // middleware pour Cross-Origin Resource Sharing
 import dotenv from "dotenv"; // gestion des variables d’environnement
 import userRoutes from "./routes/userRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
-import "./supabaseClient.js";
+import "./db.js";
 
 // const express = require("express"); Backend Node.js classique 
 

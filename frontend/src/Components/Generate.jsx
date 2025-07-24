@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, ArrowRight, Copy, FolderCode, Code, Hash, FileText, Download, Bot, Eye, Loader2, AlertCircle, CheckCheck } from "lucide-react";
+import { Folders, Sparkles, ArrowRight, Copy, FolderCode, Code, Hash, FileText, Download, Bot, Eye, Loader2, AlertCircle, CheckCheck } from "lucide-react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Preview from "./Preview";
 import Editor from "@monaco-editor/react"
 // import { toast } from "react-toastify";
-import { getIdUser, addProject } from '../services/api';
-// import supabase from '../supabaseClient';
+import { addProject, getProjects} from '../services/api';
 
 
 
 function Generate() {
+  const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [showMessages, setShowMessages] = useState(false);
@@ -19,6 +19,8 @@ function Generate() {
   const [showPreview, setShowPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const chatEndRef = useRef(null);
 
@@ -38,7 +40,7 @@ function Generate() {
     try {
       // APPEL API GEMINI (corrigé)
       const response = await fetch( 
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC9vNkHk0PewELwI8gvJJiVrC0cgAqRsdI",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyD5BrtOUP9ApUS4UeWiXZHMSl6Z7r3Dl6M",
         {
           method: "POST",
           headers: {
@@ -54,12 +56,10 @@ function Generate() {
       const data = await response.json();
 
       const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      // console.log("RAW AI TEXT:", rawText);
 
       // Nettoyer la réponse de l'IA pour ne garder que le texte explicatif
       const cleanedText = rawText.replace(/\*\*(.*?)\*\*\s*:?[\r\n]+```[\s\S]*?```/gm, '')
                                  .replace(/\n{3,}/g, '\n\n').trim();
-      // console.log("Cleaned Text:", cleanedText);
 
       // Supprimer le message de loading et afficher la réponse
       setMessages((prev) => prev.filter(msg => !msg.isLoading));
@@ -72,17 +72,16 @@ function Generate() {
       const extractedFiles = extractFiles(rawText); // From Markdown
 
       if (extractedFiles.length > 0) {
-        setFiles(extractedFiles); // ou setState équivalent pour afficher dans l'interface
-        console.log("✅ Fichiers extraits :", extractedFiles);
+        setFiles(extractedFiles); // Mise à jour des fichiers
         // Ajouter un message de succès
         setMessages((prev) => [...prev, {
           role: "assistant",
           content: ` ${extractedFiles.length} fichier(s) généré(s) avec succès !`,
           isSuccess: true
         }]);
-        saveProject();
+        saveProject(); // Sauvegarder le projet
       } else {
-         console.warn("❌ Aucun fichier détecté. Contenu brut :", rawText);
+        console.warn("❌ Aucun fichier détecté. Contenu brut :", rawText);
         setMessages((prev) => [...prev, {
           role: "assistant",
           content: " Aucun fichier n'a pu être généré. Veuillez reformuler votre demande.",
@@ -101,6 +100,19 @@ function Generate() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      const { email, token } = JSON.parse(stored);
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      if (tokenPayload?.sub) {
+        setUser({ email, id: tokenPayload.sub }); // 'sub' contient l'ID utilisateur dans les tokens JWT
+        loadHistory(tokenPayload.sub);
+      }
+    }
+    
+  }, []);
 
 //   Scroll auto vers le bas
   useEffect(() => {
@@ -191,35 +203,69 @@ async function handleDownload() {
 
   const saveProject = async () => {
     try {
-      const { data, error } = await getIdUser(); // Obtenir l'utilisateur connecté
-      console.log(data);
-      (JSON.stringify(data));
-      if (error || !data?.user) {
-        console.error('Vous devez être connecté pour sauvegarder un projet');
-        return;
-      }else{console.log("ok");
-      }
-      const user = data.user;
-      const projectContent = files.map(file => ({
-        name: file.file,
-        content: file.content,
-        language: getLanguage(file.file)
+      const projectContent = files.map(f => ({
+        name: f.file,
+        content: f.content,
+        language: getLanguage(f.file)
       }));
 
       const response = await addProject({
         user_id: user.id,
-        title: userInput.substring(0, 50), // Utiliser le début de l'entrée utilisateur comme titre
+        title: userInput.substring(0, 50) || 'Projet sans titre',
         content: JSON.stringify(projectContent)
-      })
-      console.log(response);
-      
+      });
+
+      loadHistory();
+      console.log('Réponse de sauvegarde:', response);
+
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde: ' + error.message);
+      console.error('Erreur lors de la sauvegarde:', error);
+    }
+  };
+
+  const loadHistory = async (userId = user?.id) => {
+    if (!userId) return;
+    try {
+      const list = await getProjects(userId);
+      setProjects(list);
+      console.log("list:",projects);
+      
+    } catch (e) {
+      console.error(e);
+      alert("Erreur en chargeant l'historique.");
     }
   };
 
   return (
     <div className="flex-grow overflow-y-auto flex justify-center items-center py-4 px-8">
+      <div 
+        onMouseEnter={() => setShowDropdown(true)}
+        onMouseLeave={() => setShowDropdown(false)}
+        className="relative inline-block"
+      >
+        <button
+          className="h-7 w-7 mr-2 flex justify-center items-center bg-[#1e1e1e] rounded-full"
+        >
+          <Folders className='w-4 h-4'/>
+        </button>
+          {showDropdown && projects?.length > 0 && ( 
+            <ul className="absolute top-full right-0 mt-2 w-48 bg-gray-800 text-white rounded shadow-lg">
+              {projects.map(p => (
+                <li key={p.id}>
+                  <button
+                    className="w-full text-left px-3 py-1 hover:bg-gray-700"
+                    onClick={() => {
+                      setUserInput(p.title);
+                    }}
+                  >
+                    {p.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+      </div>
+     
       {/* Colonne utilisateur */}
       <div className="w-[32%] h-full flex flex-col justify-between">
         {/* Zone de messages (user) */}
@@ -303,7 +349,7 @@ async function handleDownload() {
 
       {/* Colonne assistant  */}
       {showMessages && (
-        <div className="w-[65%] ml-[3%] h-full bg-[#1e1e1e] p-4 rounded-md flex flex-col">
+        <div className="w-[75%] ml-[3%] h-full bg-[#1e1e1e] p-4 rounded-md flex flex-col">
           {files.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center">
@@ -439,6 +485,7 @@ async function handleDownload() {
           )}
         </div>   
       )}
+
     </div>
   );
 }

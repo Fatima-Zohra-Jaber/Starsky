@@ -2,14 +2,15 @@ const API_BASE = "http://localhost:3000/api";
 
 // Fonction utilitaire pour récupérer le token d'authentification
 function getAuthToken() {
-  // const userData = localStorage.getItem('user');
-  const session = supabase.auth.getSession();
-  
-
-  if (session) {
-    // const user = JSON.parse(userData);
-    const access_token = session?.data?.session?.access_token;
-    return access_token;
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+      return user.token;
+    } catch (error) {
+      console.error('Erreur lors du parsing des données utilisateur:', error);
+      return null;
+    }
   }
   return null;
 }
@@ -49,14 +50,19 @@ export async function login(data) {
 
 export async function getIdUser() {
   const token = getAuthToken();
+  
+  if (!token) {
+    throw new Error('Aucun token d\'authentification trouvé');
+  }
 
-  const res = await fetch(`${API_BASE}/users/`, {
-    method: "POST",
+  const res = await fetch(`${API_BASE}/users/me`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
+      "Authorization": `Bearer ${token}`,
     },
   });
+
 
   if (!res.ok) {
     const errorData = await res.text();
@@ -64,22 +70,33 @@ export async function getIdUser() {
     throw new Error(`HTTP ${res.status}: ${errorData}`);
   }
 
-  return res.json();
+  const result = await res.json();
+  return result;
 }
 
 export async function addProject(data) {
   const token = getAuthToken();
-  const headers = { "Content-Type": "application/json" };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  if (!token) {
+    throw new Error('Aucun token d\'authentification trouvé');
   }
+
+  const headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
 
   const res = await fetch(`${API_BASE}/projects`, {
     method: "POST",
     headers,
     body: JSON.stringify(data),
   });
+
+  if (!res.ok) {
+    const errorData = await res.text();
+    throw new Error(`HTTP ${res.status}: ${errorData}`);
+  }
+
   return res.json();
 }
 
