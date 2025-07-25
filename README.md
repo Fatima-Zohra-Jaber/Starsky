@@ -3,7 +3,6 @@
 ## Description
 Ce projet est une application web full-stack construite avec React (frontend), Express (backend), Supabase (base de données et authentification), et intégrant des fonctionnalités d'IA pour générer des projets web (HTML/CSS/JS) avec sauvegarde côté back‑end.
 
----
 
 ## Fonctionnalités
 **Authentification Utilisateur :** Gestion des utilisateurs avec Supabase (inscription, connexion, déconnexion)
@@ -16,7 +15,6 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 **API RESTful :** Backend Express pour fournir l’API au frontend
 **Base de données Supabase :** Stockage des données et authentification
 
----
 
 ## Technologies utilisées
 **Frontend :** React, Vite, Tailwind CSS, Monaco Editor, Lucide React, React Router DOM
@@ -25,15 +23,12 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 **IA :** Gemini from Google Cloud
 **Autres :** JSZip, dotenv
 
----
 
 ## Prérequis
 Node.js (version >= 16)
 npm ou yarn
 Un compte Supabase
 Une clé API pour l'API d'IA utilisée
-
----
 
 ## Installation & Exécution
 
@@ -53,7 +48,6 @@ npm install
 npm run dev
 ```
 
----
 
 ## Structure du projet
 ```
@@ -82,7 +76,6 @@ npm run dev
 └── README.md             # Documentation
 ```
 
----
 
 ## API
 
