@@ -5,15 +5,15 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 
 
 ## Fonctionnalités
-**Authentification Utilisateur :** Gestion des utilisateurs avec Supabase (inscription, connexion, déconnexion)
-**Génération de code via IA :** envoi de prompts à un modèle (ex. Gemini), pour générer un ensemble de fichiers
-**Affichage & édition de code :** interface React avec Monaco Editor pour modifier les fichiers générés.
-**Live Preview :** Affichage en direct des modifications dans un iframe
-**Historique des projets :** Sauvegarde et consultation des projets générés
-**Téléchargement ZIP :** Export des fichiers dans une archive via JSZip.
-**Interface réactive :** Frontend développé avec React pour une expérience fluide
-**API RESTful :** Backend Express pour fournir l’API au frontend
-**Base de données Supabase :** Stockage des données et authentification
+* **Authentification Utilisateur :** Gestion des utilisateurs avec Supabase (inscription, connexion, déconnexion)
+* **Génération de code via IA :** envoi de prompts à un modèle (ex. Gemini), pour générer un ensemble de fichiers
+* **Affichage & édition de code :** interface React avec Monaco Editor pour modifier les fichiers générés.
+* **Live Preview :** Affichage en direct des modifications dans un iframe.
+* **Historique des projets :** Sauvegarde et consultation des projets générés
+* **Téléchargement ZIP :** Export des fichiers dans une archive via JSZip.
+* **Interface réactive :** Frontend développé avec React pour une expérience fluide
+* **API RESTful :** Backend Express pour fournir l’API au frontend
+* **Base de données Supabase :** Stockage des données et authentification
 
 
 ## Technologies utilisées
