@@ -22,7 +22,7 @@ function Header(){
     };
 
     return (
-        <div className="sticky top-0 shadow z-50 min-h-16 px-8 flex justify-between items-center border-b border-gray-500/20">
+        <div className="sticky top-0 shadow z-50 min-h-16 px-6 flex justify-between items-center border-b border-gray-500/20">
             {/* Logo et version*/}
                 <div className="flex items-center space-x-8">
                     <Link to="/" className="flex items-center group">

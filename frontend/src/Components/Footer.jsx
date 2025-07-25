@@ -2,7 +2,7 @@ import { Youtube, Twitter, Linkedin, Instagram, Github, Heart } from "lucide-rea
 
 function Footer(){
     return (
-        <footer className="border-t border-gray-800/50 bg-gray-900/30 backdrop-blur-sm px-8">
+        <footer className="border-t border-gray-800/50 bg-gray-900/30 backdrop-blur-sm px-6">
             <div className="flex flex-col md:flex-row justify-between items-center py-4 text-sm">
                 {/* Créateur */}
                 <div className="flex items-center mb-2 md:mb-0">

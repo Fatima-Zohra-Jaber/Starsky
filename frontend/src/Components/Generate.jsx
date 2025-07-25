@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Folders, Sparkles, ArrowRight, Copy, FolderCode, Code, Hash, FileText, Download, Bot, Eye, Loader2, AlertCircle, CheckCheck } from "lucide-react";
-import JSZip from "jszip";
+import { Folders, Sparkles, ArrowRight, Copy, FolderCode, Code, Hash, FileText, Download, Bot, Eye, Loader2, AlertCircle, CheckCheck, List } from "lucide-react";
+import JSZip, { file } from "jszip";
 import { saveAs } from "file-saver";
 import Preview from "./Preview";
 import Editor from "@monaco-editor/react"
@@ -38,9 +38,11 @@ function Generate() {
     setMessages(prev => [...prev, { role: "assistant", content: <div className="flex items-center space-x-2"><Bot className="animate-pulse" /><p>Génération en cours...</p></div>, isLoading: true }]);
 
     try {
-      // APPEL API GEMINI (corrigé)
-      const response = await fetch( 
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyD5BrtOUP9ApUS4UeWiXZHMSl6Z7r3Dl6M",
+      // APPEL API GEMINI 
+      const host = "https://generativelanguage.googleapis.com";
+      const path = "v1beta/models/gemini-2.0-flash:generateContent?";
+      const apiKey = "AIzaSyD5BrtOUP9ApUS4UeWiXZHMSl6Z7r3Dl6M";
+      const response = await fetch( `${host}/${path}key=${apiKey}`,
         {
           method: "POST",
           headers: {
@@ -48,7 +50,10 @@ function Generate() {
           },
           body: JSON.stringify({
             contents: [{ parts: [{ text: userInput }] }],
-            // response_mime_type: "application/json", // Spécification du format JSON
+            generationConfig: {
+              temperature: 0.2, //from 0 (very strict) to 1 (very creative)
+              maxOutputTokens: 2000
+            }
           }),
         }
       );
@@ -72,14 +77,15 @@ function Generate() {
       const extractedFiles = extractFiles(rawText); // From Markdown
 
       if (extractedFiles.length > 0) {
+        console.log("extractedFiles", extractedFiles);
         setFiles(extractedFiles); // Mise à jour des fichiers
+        saveProject(extractedFiles); // Sauvegarder le projet
         // Ajouter un message de succès
         setMessages((prev) => [...prev, {
           role: "assistant",
           content: ` ${extractedFiles.length} fichier(s) généré(s) avec succès !`,
           isSuccess: true
         }]);
-        saveProject(); // Sauvegarder le projet
       } else {
         console.warn("❌ Aucun fichier détecté. Contenu brut :", rawText);
         setMessages((prev) => [...prev, {
@@ -201,18 +207,21 @@ async function handleDownload() {
 
 }
 
-  const saveProject = async () => {
+  const saveProject = async (filesToSave) => {
     try {
-      const projectContent = files.map(f => ({
-        name: f.file,
+      console.log("saveProject", filesToSave);
+      
+      const projectContent = filesToSave.map(f => ({
+        file: f.file,
         content: f.content,
-        language: getLanguage(f.file)
+        // language: getLanguage(f.file)
       }));
 
       const response = await addProject({
         user_id: user.id,
         title: userInput.substring(0, 50) || 'Projet sans titre',
-        content: JSON.stringify(projectContent)
+        // content: JSON.stringify(projectContent)
+        content: projectContent
       });
 
       loadHistory();
@@ -228,7 +237,7 @@ async function handleDownload() {
     try {
       const list = await getProjects(userId);
       setProjects(list);
-      console.log("list:",projects);
+      console.log("projects list:",List);
       
     } catch (e) {
       console.error(e);
@@ -237,33 +246,50 @@ async function handleDownload() {
   };
 
   return (
-    <div className="flex-grow overflow-y-auto flex justify-center items-center py-4 px-8">
+    <div className="relative flex-grow flex h-full w-full overflow-hidden justify-center items-center py-4 px-6">
       <div 
         onMouseEnter={() => setShowDropdown(true)}
         onMouseLeave={() => setShowDropdown(false)}
-        className="relative inline-block"
+        className="flex flex-col items-center justify-end h-full mb-10"
+        
       >
         <button
           className="h-7 w-7 mr-2 flex justify-center items-center bg-[#1e1e1e] rounded-full"
         >
           <Folders className='w-4 h-4'/>
         </button>
-          {showDropdown && projects?.length > 0 && ( 
-            <ul className="absolute top-full right-0 mt-2 w-48 bg-gray-800 text-white rounded shadow-lg">
+        {showDropdown && projects?.length > 0 && ( 
+          <div className="flex flex-col fixed left-0 top-0 w-[320px] h-full bg-gradient-to-br bg-[#161616] border-r-2 border-[#2F2F2F] z-50 shadow-2xl rounded-r-3xl text-sm overflow-hidden animate-slide-in">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#2F2F2F] bg-[#101010]">
+              <span className="font-bold text-lg text-white tracking-wide flex items-center gap-2">
+                <List className="w-5 h-5 text-white" />
+                Historique projets
+              </span>
+              <span className="text-xs text-gray-400">{projects.length} projet{projects.length > 1 ? 's' : ''}</span>
+            </div>
+            <ul className="flex-1 overflow-y-auto no-scrollbar px-2 py-2 space-y-1">
               {projects.map(p => (
-                <li key={p.id}>
+                <li key={p.id} className="group">
                   <button
-                    className="w-full text-left px-3 py-1 hover:bg-gray-700"
+                    className="w-full flex items-center gap-2 text-left px-3 py-2 rounded-lg bg-[#292929] hover:bg-blue-900/30 transition border border-transparent hover:border-blue-500 shadow-sm"
                     onClick={() => {
-                      setUserInput(p.title);
+                      setUserInput(p.title); 
+                      setFiles(p.content);
+                      setShowMessages(true);
                     }}
                   >
-                    {p.title}
+                    <FolderCode className="w-4 h-4 text-white group-hover:text-blue-400" />
+                    <span className="truncate font-medium text-white">{p.title}</span>
+                    <span className="ml-auto text-xs text-gray-400">{new Date(p.created_at).toLocaleDateString()}</span>
                   </button>
                 </li>
               ))}
+              {projects.length === 0 && (
+                <li className="text-center text-gray-500 py-8">Aucun projet enregistré</li>
+              )}
             </ul>
-          )}
+          </div>
+        )}
       </div>
      
       {/* Colonne utilisateur */}
