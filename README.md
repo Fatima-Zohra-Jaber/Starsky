@@ -17,18 +17,18 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 
 
 ## Technologies utilisées
-**Frontend :** React, Vite, Tailwind CSS, Monaco Editor, Lucide React, React Router DOM
-**Backend :** Node.js, Express
-**Base de données :** Supabase (authentification + base de données PostgreSQL)
-**IA :** Gemini from Google Cloud
-**Autres :** JSZip, dotenv
+* **Frontend :** React, Vite, Tailwind CSS, Monaco Editor, Lucide React, React Router DOM
+* **Backend :** Node.js, Express
+* **Base de données :** Supabase (authentification + base de données PostgreSQL)
+* **IA :** Gemini from Google Cloud
+* **Autres :** JSZip, dotenv
 
 
 ## Prérequis
-Node.js (version >= 16)
-npm ou yarn
-Un compte Supabase
-Une clé API pour l'API d'IA utilisée
+* Node.js (version >= 16)
+* npm ou yarn
+* Un compte Supabase
+* Une clé API pour l'API d'IA utilisée
 
 ## Installation & Exécution
 
