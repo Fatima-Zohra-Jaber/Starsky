@@ -10,15 +10,14 @@ export default function App() {
     <div className="flex flex-col h-screen text-white bg-black">
       
       <Header />
-      <Routes>
-        <Route path="/" element={<Hero />} />
-        
-        <Route path="/generate" element={<Generate />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <main className="flex-grow overflow-hidden">
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/generate" element={<Generate />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </main>
       <Footer />
-
-
 
     </div>
   );

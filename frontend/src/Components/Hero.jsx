@@ -7,6 +7,7 @@ export default function Hero() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+  // Vérifier si l'utilisateur est connecté
   useEffect(() => {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -14,6 +15,7 @@ export default function Hero() {
     }
   }, []);
 
+  // Rediriger vers la page de génération si l'utilisateur est connecté, vers la page de login sinon
   const handleClick = () => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -24,7 +26,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="flex-grow overflow-y-auto flex flex-col items-center justify-center text-center">
+    <div className="flex flex-col items-center justify-center text-center py-8">
       {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>

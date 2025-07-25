@@ -8,6 +8,7 @@ function Header(){
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
 
+    // Vérifier si l'utilisateur est connecté
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (userData) {
@@ -15,6 +16,7 @@ function Header(){
         }
     }, [location]);
 
+    // Déconnexion
     const handleLogout = () => {
         localStorage.removeItem('user');
         setUser(null);
@@ -39,7 +41,7 @@ function Header(){
                         </div>
                     </Link>
                 </div>
-            {/* Actions utilisateur */}
+            {/* Connexion / Déconnexion */}
             <div className="flex items-center space-x-4">
                 {user ? (
                     <div className="flex items-center space-x-3">

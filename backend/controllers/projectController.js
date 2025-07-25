@@ -1,17 +1,15 @@
 import supabase from '../db.js';
 
+// Fonction pour ajouter un projet
 export const addProject = async (req, res) => {
   try {
-    console.log('addProject req.body:', req.body);
-    console.log('Headers:', req.headers);
-
     const { user_id, title, content } = req.body;
 
     if (!user_id || !title || !content) {
       return res.status(400).json({ error: "Données manquantes (user_id, title, content requis)" });
     }
 
-    // Essayer avec une approche différente - utiliser rpc ou raw SQL
+    // Insérer le projet dans la base de données
     const { data, error } = await supabase
       .from('projects')
       .insert([{ user_id, title, content }])
@@ -28,6 +26,7 @@ export const addProject = async (req, res) => {
   }
 };
 
+// Fonction pour récupérer les projets d'un utilisateur
 export const getProjects = async (req, res) => {
   const { user_id } = req.params;
   const { data, error } = await supabase

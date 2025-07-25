@@ -6,7 +6,7 @@ import { login, register } from '../services/api';
 
 export default function Login() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); //MonMotDePasse123
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +19,7 @@ export default function Login() {
     setError('');
 
     try {
+      // Appel à la fonction de service correspondante
       const response = isSignUp
         ? await register({ email, password })
         : await login({ email, password });
@@ -29,7 +30,6 @@ export default function Login() {
         if (isSignUp) {
           setError('');
           setIsSignUp(false);
-          alert('Inscription réussie ! Vérifiez votre email pour confirmer votre compte, puis connectez-vous.');
         } else {
           // Stocker le token et l'email dans localStorage
           localStorage.setItem("user", JSON.stringify({
@@ -152,13 +152,6 @@ export default function Login() {
               )}
             </button>
           </form>
-
-          {/* Note d'information pour l'inscription */}
-          {/* {isSignUp && (
-            <div className="bg-blue-900/20 border border-blue-500/30 text-blue-300 p-3 mb-4 rounded-xl text-xs">
-              <strong>Note :</strong> Après inscription, vous devrez peut-être confirmer votre email avant de pouvoir vous connecter.
-            </div>
-          )} */}
 
           {/* Divider */}
           <div className="relative my-4">

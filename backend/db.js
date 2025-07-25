@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
+// Chargement des variables d’environnement
 dotenv.config();
 
+// Connexion à Supabase
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
@@ -12,6 +14,7 @@ const supabase = createClient(
 export default supabase;
 
 
+// creation de la table des projets
 // create table public.projects (
 //   id uuid primary key default gen_random_uuid(),
 //   title text not null,

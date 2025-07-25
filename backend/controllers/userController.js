@@ -1,5 +1,6 @@
 import supabase from "../db.js";
 
+// Inscription d'un nouvel utilisateur
 export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -23,6 +24,7 @@ export const register = async (req, res) => {
   }
 }
 
+// Connexion d'un utilisateur existant
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -46,27 +48,9 @@ export const login = async (req, res) => {
   }
 }
 
+// Récupération des informations de l'utilisateur connecté
 export const getIdUser = (req, res) => {
   res.json({ user: req.user });
 };
 
-// export const getIdUser = async (req, res) => {
-//   try {
-//     console.log(req.headers.authorization);
-//     const token = req.headers.authorization?.split("Bearer ")[1];
 
-//     if (!token) {
-//       return res.status(401).json({ error: "Token manquant" });
-//     }
-
-//     const { data, error } = await supabase.auth.getUser(token);
-
-//     if (error || !data?.user) {
-//       return res.status(401).json({ error: "Token invalide" });
-//     }
-
-//     res.json({ user: data.user });
-//   } catch (err) {
-//     res.status(500).json({ error: "Erreur interne du serveur" });
-//   }
-// };

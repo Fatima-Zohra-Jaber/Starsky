@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export default function Preview({ files }) {
   const [srcDoc, setSrcDoc] = useState("");
 
+  // Générer le contenu de l'iframe en fonction des fichiers
   useEffect(() => {
     setSrcDoc(generatePreviewHTML(files));
   }, [files]);
@@ -21,6 +22,7 @@ export default function Preview({ files }) {
   );
 }
 
+// Générer le contenu de l'iframe en fonction des fichiers
 function generatePreviewHTML(files) {
   const htmlFile = files.find(f => f.file.endsWith(".html"))?.content || "";
   const css = files.find(f => f.file.endsWith(".css"))?.content || "";

@@ -15,7 +15,7 @@ function getAuthToken() {
   return null;
 }
 
-
+// Authentification
 export async function register(data) {
   const res = await fetch(`${API_BASE}/users/register`, {
     method: "POST",
@@ -32,6 +32,7 @@ export async function register(data) {
   return res.json();
 }
 
+// Connexion
 export async function login(data) {
   const res = await fetch(`${API_BASE}/users/login`, {
     method: "POST",
@@ -48,6 +49,7 @@ export async function login(data) {
   return res.json();
 }
 
+// Récupération des informations de l'utilisateur connecté
 export async function getIdUser() {
   const token = getAuthToken();
   
@@ -74,7 +76,10 @@ export async function getIdUser() {
   return result;
 }
 
+// Ajout d'un projet
 export async function addProject(data) {
+
+  // Récupération du token d'authentification
   const token = getAuthToken();
 
   if (!token) {
@@ -100,7 +105,10 @@ export async function addProject(data) {
   return res.json();
 }
 
+// Récupération des projets d'un utilisateur
 export async function getProjects(userId) {
+
+  // Récupération du token d'authentification
   const token = getAuthToken();
   const headers = { "Content-Type": "application/json" };
 
