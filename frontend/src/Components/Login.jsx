@@ -58,12 +58,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-grow overflow-y-auto flex justify-center items-center p-4 relative">     
+    <div className="flex justify-center items-center px-4 py-3 relative">     
       <div className="relative w-full max-w-md transition-all duration-300 rounded-2xl hover:shadow-[0_0_15px_rgba(37,99,235,0.3)]">
         {/* Carte de connexion */}
-        <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-800/50 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-800/50 rounded-2xl p-6 shadow-2xl">
           {/* En-tête */}
-          <h2 className="text-center text-2xl font-bold text-white mb-2">
+          <h2 className="text-center text-2xl font-bold text-white mb-3">
             {isSignUp ? 'Inscription' : 'Connexion'}
           </h2>
 
