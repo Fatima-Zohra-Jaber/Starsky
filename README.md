@@ -1,6 +1,7 @@
 # ⭐ Starsky AI Chat‑Generator
 
 ## Description
+![Starsky](screenshots/home.png)
 Ce projet est une application web full-stack construite avec React (frontend), Express (backend), Supabase (base de données et authentification), et intégrant des fonctionnalités d'IA pour générer des projets web (HTML/CSS/JS) avec sauvegarde côté back‑end.
 
 
@@ -15,6 +16,19 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 * **API RESTful :** Backend Express pour fournir l’API au frontend
 * **Base de données Supabase :** Stockage des données et authentification
 
+## Capture d'écran
+
+### Page de connexion
+![Page de connexion](screenshots/connexion.png)
+
+### Page de saisie du prompt
+![Page de saisie du prompt](screenshots/prompt.png)
+
+### Page de generation du code
+![Page de generation](screenshots/generate.png)
+
+### Page d'historique des projets
+![Page historique](screenshots/history.png)
 
 ## Technologies utilisées
 * **Frontend :** React, Vite, Tailwind CSS, Monaco Editor, Lucide React, React Router DOM
