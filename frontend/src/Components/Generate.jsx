@@ -37,9 +37,10 @@ function Generate() {
 
     try {
       // APPEL API GEMINI 
-      const host = "https://generativelanguage.googleapis.com";
-      const path = "v1beta/models/gemini-2.0-flash:generateContent?";
-      const apiKey = "AIzaSyD5BrtOUP9ApUS4UeWiXZHMSl6Z7r3Dl6M";
+      const host = import.meta.env.VITE_HOST;
+      const path = import.meta.env.VITE_PATH;
+      const apiKey = import.meta.env.VITE_API_KEY;
+      
       const response = await fetch( `${host}/${path}key=${apiKey}`,
         {
           method: "POST",
