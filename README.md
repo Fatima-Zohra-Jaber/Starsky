@@ -1,9 +1,9 @@
 # ⭐ Starsky AI Chat‑Generator
 
-## Description
 ![Starsky](screenshots/home.png)
-Ce projet est une application web full-stack construite avec React (frontend), Express (backend), Supabase (base de données et authentification), et intégrant des fonctionnalités d'IA pour générer des projets web (HTML/CSS/JS) avec sauvegarde côté back‑end.
 
+## Description
+Ce projet est une application web full-stack construite avec React (frontend), Express (backend), Supabase (base de données et authentification), et intégrant des fonctionnalités d'IA pour générer des projets web (HTML/CSS/JS) avec sauvegarde côté back‑end.
 
 ## Fonctionnalités
 * **Authentification Utilisateur :** Gestion des utilisateurs avec Supabase (inscription, connexion, déconnexion)
@@ -16,27 +16,12 @@ Ce projet est une application web full-stack construite avec React (frontend), E
 * **API RESTful :** Backend Express pour fournir l’API au frontend
 * **Base de données Supabase :** Stockage des données et authentification
 
-## Capture d'écran
-
-### Page de connexion
-![Page de connexion](screenshots/connexion.png)
-
-### Page de saisie du prompt
-![Page de saisie du prompt](screenshots/prompt.png)
-
-### Page de generation du code
-![Page de generation](screenshots/generate.png)
-
-### Page d'historique des projets
-![Page historique](screenshots/history.png)
-
 ## Technologies utilisées
 * **Frontend :** React, Vite, Tailwind CSS, Monaco Editor, Lucide React, React Router DOM
 * **Backend :** Node.js, Express
 * **Base de données :** Supabase (authentification + base de données PostgreSQL)
 * **IA :** Gemini from Google Cloud
 * **Autres :** JSZip, dotenv
-
 
 ## Prérequis
 * Node.js (version >= 16)
@@ -61,8 +46,6 @@ cd frontend
 npm install
 npm run dev
 ```
-
-
 ## Structure du projet
 ```
 /Starsky
@@ -90,7 +73,6 @@ npm run dev
 └── README.md             # Documentation
 ```
 
-
 ## API
 
 Le backend expose une API RESTful avec les endpoints suivants :
@@ -101,3 +83,16 @@ Le backend expose une API RESTful avec les endpoints suivants :
 - `POST /api/projects/` : Sauvegarder un projet (addProject)
 - `GET /api/projects/:user_id` : Récupérer l’historique des projets d’un utilisateur (getProjects)
 
+## Captures d'écran
+
+### Page de connexion
+![Page de connexion](screenshots/connexion.png)
+
+### Page de saisie du prompt
+![Page de saisie du prompt](screenshots/prompt.png)
+
+### Page de generation du code
+![Page de generation](screenshots/generate.png)
+
+### Page d'historique des projets
+![Page historique](screenshots/history.png)
